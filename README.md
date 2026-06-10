@@ -1,4 +1,4 @@
-# 🏨 Grand Lumière / Royal Crown Hotel Management — Frontend
+# 🏨 Royal Crown / Royal Crown Hotel Management — Frontend
 
 Vanilla HTML/CSS/JavaScript single-page frontend for the hotel management backend.
 
