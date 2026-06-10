@@ -1431,63 +1431,62 @@
 
     }
 
-.booking-card{
-padding:30px;
-margin-bottom:25px;
-}
+    .booking-card {
+      padding: 30px;
+      margin-bottom: 25px;
+    }
 
-.booking-title{
-margin-bottom:25px;
-font-size:28px;
-}
+    .booking-title {
+      margin-bottom: 25px;
+      font-size: 28px;
+    }
 
-.form-grid{
-display:grid;
-grid-template-columns:
-repeat(auto-fit,minmax(240px,1fr));
-gap:20px;
-}
+    .form-grid {
+      display: grid;
+      grid-template-columns:
+        repeat(auto-fit, minmax(240px, 1fr));
+      gap: 20px;
+    }
 
-.input-group{
-display:flex;
-flex-direction:column;
-gap:8px;
-}
+    .input-group {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
 
-.input-group label{
-font-size:14px;
-color:#c9a96e;
-font-weight:500;
-}
+    .input-group label {
+      font-size: 14px;
+      color: #c9a96e;
+      font-weight: 500;
+    }
 
-.form-input{
-width:100%;
-padding:14px;
-border-radius:10px;
-border:1px solid #2e2e38;
-background:#111;
-color:white;
-font-size:14px;
-outline:none;
-transition:0.3s;
-}
+    .form-input {
+      width: 100%;
+      padding: 14px;
+      border-radius: 10px;
+      border: 1px solid #2e2e38;
+      background: #111;
+      color: white;
+      font-size: 14px;
+      outline: none;
+      transition: 0.3s;
+    }
 
-.form-input:focus{
-border-color:#c9a96e;
-box-shadow:0 0 10px rgba(201,169,110,0.2);
-}
+    .form-input:focus {
+      border-color: #c9a96e;
+      box-shadow: 0 0 10px rgba(201, 169, 110, 0.2);
+    }
 
-.form-input option{
-background:#111;
-color:white;
-}
+    .form-input option {
+      background: #111;
+      color: white;
+    }
 
-.booking-btn{
-margin-top:25px;
-padding:14px 28px;
-font-size:15px;
-}
-
+    .booking-btn {
+      margin-top: 25px;
+      padding: 14px 28px;
+      font-size: 15px;
+    }
   </style>
 </head>
 
@@ -1764,113 +1763,97 @@ document.querySelector('[data-page=reservations]'))">
 
         <div class="card booking-card">
 
-  <h2 class="booking-title">
-    Book Your Stay
-  </h2>
+          <h2 class="booking-title">
+            Book Your Stay
+          </h2>
 
-  <div class="form-grid">
+          <div class="form-grid">
 
-    <div class="input-group">
-      <label>Full Name</label>
-      <input type="text"
-      id="r-name"
-      placeholder="Enter your full name"
-      class="form-input">
-    </div>
+            <div class="input-group">
+              <label>Full Name</label>
+              <input type="text" id="r-name" placeholder="Enter your full name" class="form-input">
+            </div>
 
-    <div class="input-group">
-      <label>Phone</label>
-      <input type="tel"
-      id="r-phone"
-      placeholder="10-digit phone"
-      class="form-input">
-    </div>
+            <div class="input-group">
+              <label>Phone</label>
+              <input type="tel" id="r-phone" placeholder="10-digit phone" class="form-input">
+            </div>
 
-    <div class="input-group">
-      <label>Email Address</label>
-      <input type="email"
-      id="r-email"
-      placeholder="Enter your email"
-      class="form-input">
-    </div>
+            <div class="input-group">
+              <label>Email Address</label>
+              <input type="email" id="r-email" placeholder="Enter your email" class="form-input">
+            </div>
 
-    <div class="input-group">
-      <label>Proof Type</label>
-      <select id="r-proof-type" class="form-input">
-        <option value="Aadhaar">Aadhaar</option>
-        <option value="Passport">Passport</option>
-        <option value="Driving License">Driving License</option>
-        <option value="Voter ID">Voter ID</option>
-        <option value="PAN Card">PAN Card</option>
-      </select>
-    </div>
+            <div class="input-group">
+              <label>Proof Type</label>
+              <select id="r-proof-type" class="form-input">
+                <option value="Aadhaar">Aadhaar</option>
+                <option value="Passport">Passport</option>
+                <option value="Driving License">Driving License</option>
+                <option value="Voter ID">Voter ID</option>
+                <option value="PAN Card">PAN Card</option>
+              </select>
+            </div>
 
-    <div class="input-group">
-      <label>Proof Number</label>
-      <input type="text"
-      id="r-proof-no"
-      placeholder="Enter ID proof number"
-      class="form-input">
-    </div>
+            <div class="input-group">
+              <label>Proof Number</label>
+              <input type="text" id="r-proof-no" placeholder="Enter ID proof number" class="form-input">
+            </div>
 
-    <div class="input-group">
-      <label>Room</label>
-      <select id="r-room-select" class="form-input">
-        <option value="">Select a room…</option>
-      </select>
-    </div>
+            <div class="input-group">
+              <label>Room</label>
+              <select id="r-room-select" class="form-input">
+                <option value="">Select a room…</option>
+              </select>
+            </div>
 
-    <div class="input-group">
-      <label>Check In</label>
-      <input type="date"
-      id="r-checkin"
-      class="form-input">
-    </div>
+            <div class="input-group">
+              <label>Check In</label>
+              <input type="date" id="r-checkin" class="form-input">
+            </div>
 
-    <div class="input-group">
-      <label>Check Out</label>
-      <input type="date"
-      id="r-checkout"
-      class="form-input">
-    </div>
+            <div class="input-group">
+              <label>Check Out</label>
+              <input type="date" id="r-checkout" class="form-input">
+            </div>
 
-    <div class="input-group">
-      <label>Adults</label>
-      <select id="r-adults" class="form-input">
-        <option value="1">1 Adult</option>
-        <option value="2" selected>2 Adults</option>
-        <option value="3">3 Adults</option>
-        <option value="4">4 Adults</option>
-      </select>
-    </div>
+            <div class="input-group">
+              <label>Adults</label>
+              <select id="r-adults" class="form-input">
+                <option value="1">1 Adult</option>
+                <option value="2" selected>2 Adults</option>
+                <option value="3">3 Adults</option>
+                <option value="4">4 Adults</option>
+              </select>
+            </div>
 
-    <div class="input-group">
-      <label>Children</label>
-      <select id="r-children" class="form-input">
-        <option value="0" selected>0 Children</option>
-        <option value="1">1 Child</option>
-        <option value="2">2 Children</option>
-        <option value="3">3 Children</option>
-      </select>
-    </div>
+            <div class="input-group">
+              <label>Children</label>
+              <select id="r-children" class="form-input">
+                <option value="0" selected>0 Children</option>
+                <option value="1">1 Child</option>
+                <option value="2">2 Children</option>
+                <option value="3">3 Children</option>
+              </select>
+            </div>
 
-    <div class="input-group" style="grid-column: 1 / -1">
-      <label>Special Requests</label>
-      <textarea id="r-requests" class="form-input" rows="2" placeholder="Any special requirements?"></textarea>
-    </div>
+            <div class="input-group" style="grid-column: 1 / -1">
+              <label>Special Requests</label>
+              <textarea id="r-requests" class="form-input" rows="2" placeholder="Any special requirements?"></textarea>
+            </div>
 
-  </div>
+          </div>
 
-  <div id="public-price-preview" style="display:none; margin: 14px 0;">
-    <div class="alert alert-info" id="public-price-text"></div>
-  </div>
+          <div id="public-price-preview" style="display:none; margin: 14px 0;">
+            <div class="alert alert-info" id="public-price-text"></div>
+          </div>
 
-  <button class="btn btn-gold booking-btn" id="btn-public-book" onclick="submitPublicBooking()">
-    Confirm Booking
-  </button>
+          <button class="btn btn-gold booking-btn" id="btn-public-book" onclick="submitPublicBooking()">
+            Confirm Booking
+          </button>
 
-</div>
-
+        </div>
+<!-- 
         <div class="card">
 
           <table class="table">
@@ -1887,12 +1870,14 @@ document.querySelector('[data-page=reservations]'))">
             </thead>
 
             <tbody id="public-reservations-table">
-              <tr><td colspan="6" style="text-align:center;padding:24px;color:var(--text-muted)">Loading…</td></tr>
+              <tr>
+                <td colspan="6" style="text-align:center;padding:24px;color:var(--text-muted)">Loading…</td>
+              </tr>
             </tbody>
 
           </table>
 
-        </div>
+        </div> -->
 
       </div>
 
