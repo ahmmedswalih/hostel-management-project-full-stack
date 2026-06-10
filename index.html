@@ -1,0 +1,2520 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Royal Crown — Hotel Management</title>
+  <link rel="icon" type="image" href="https://c8.alamy.com/zooms/9/4fe36ed9c04141138800a80906be7bae/2c43bd8.jpg">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Jost:wght@300;400;500;600&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+    :root {
+      --gold: #c9a84c;
+      --gold-light: #e4c97e;
+      --gold-dim: #8a6d2f;
+      --gold-bg: rgba(201, 168, 76, 0.07);
+      --bg-deep: #0c0c0e;
+      --bg-panel: #121215;
+      --bg-card: #1a1a1f;
+      --bg-hover: #22222a;
+      --border: #2e2e38;
+      --border-gold: rgba(201, 168, 76, 0.22);
+      --text-primary: #f0ece0;
+      --text-secondary: #9a9585;
+      --text-muted: #5a5750;
+      --red: #c0392b;
+      --green: #27ae60;
+      --blue: #2980b9;
+      --amber: #e67e22;
+      --radius: 6px;
+      --shadow: 0 4px 24px rgba(0, 0, 0, 0.6);
+      --shadow-lg: 0 16px 50px rgba(0, 0, 0, 0.7);
+      --sidebar-w: 242px;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Jost', sans-serif;
+      background: var(--bg-deep);
+      color: var(--text-primary);
+      min-height: 100vh;
+      display: flex;
+      overflow-x: hidden;
+    }
+
+    /* ══════════════════════════════
+     SIDEBAR
+  ══════════════════════════════ */
+    .sidebar {
+      width: var(--sidebar-w);
+      min-height: 100vh;
+      background: var(--bg-panel);
+      border-right: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      position: fixed;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      z-index: 200;
+      transition: transform 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .sidebar-logo {
+      padding: 26px 20px 18px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .sidebar-logo .hotel-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 21px;
+      font-weight: 600;
+      color: var(--gold);
+      letter-spacing: 1px;
+      line-height: 1.2;
+    }
+
+    .sidebar-logo .tagline {
+      font-size: 9.5px;
+      color: var(--text-muted);
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      margin-top: 3px;
+    }
+
+    /* Close button inside sidebar (mobile) */
+    .sidebar-close-btn {
+      display: none;
+      background: none;
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 14px;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      transition: all 0.15s;
+    }
+
+    .sidebar-close-btn:hover {
+      color: var(--text-primary);
+      border-color: var(--border-gold);
+    }
+
+    .sidebar-nav {
+      flex: 1;
+      padding: 12px 0;
+      overflow-y: auto;
+    }
+
+    .nav-section-label {
+      font-size: 9px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      padding: 12px 20px 5px;
+    }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 20px;
+      cursor: pointer;
+      color: var(--text-secondary);
+      font-size: 13px;
+      font-weight: 400;
+      transition: all 0.15s;
+      border-left: 2px solid transparent;
+      letter-spacing: 0.3px;
+    }
+
+    .nav-item:hover {
+      background: var(--bg-hover);
+      color: var(--text-primary);
+    }
+
+    .nav-item.active {
+      color: var(--gold);
+      border-left-color: var(--gold);
+      background: var(--gold-bg);
+      font-weight: 500;
+    }
+
+    .nav-item .icon {
+      font-size: 15px;
+      width: 20px;
+      text-align: center;
+    }
+
+    .sidebar-footer {
+      padding: 14px 20px;
+      border-top: 1px solid var(--border);
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    /* Sidebar overlay (mobile) */
+    .sidebar-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.7);
+      z-index: 190;
+      backdrop-filter: blur(2px);
+    }
+
+    .sidebar-overlay.show {
+      display: block;
+    }
+
+    /* ══════════════════════════════
+     TOPBAR
+  ══════════════════════════════ */
+    .main {
+      margin-left: var(--sidebar-w);
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      min-width: 0;
+    }
+
+    .topbar {
+      background: var(--bg-panel);
+      border-bottom: 1px solid var(--border);
+      padding: 0 20px;
+      height: 56px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      gap: 12px;
+    }
+
+    .topbar-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-width: 0;
+    }
+
+    /* Hamburger */
+    .hamburger {
+      display: none;
+      background: none;
+      border: 1px solid var(--border);
+      color: var(--text-secondary);
+      width: 34px;
+      height: 34px;
+      border-radius: var(--radius);
+      cursor: pointer;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      font-size: 16px;
+      transition: all 0.15s;
+    }
+
+    .hamburger:hover {
+      border-color: var(--border-gold);
+      color: var(--gold);
+    }
+
+    .topbar-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 19px;
+      font-weight: 400;
+      color: var(--text-primary);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .topbar-right {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 13px;
+      color: var(--text-secondary);
+      flex-shrink: 0;
+    }
+
+    .topbar-date {
+      font-size: 11.5px;
+      color: var(--text-muted);
+      letter-spacing: 0.3px;
+    }
+
+    .admin-badge {
+      background: var(--gold-bg);
+      border: 1px solid var(--border-gold);
+      color: var(--gold);
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 11px;
+      letter-spacing: 0.5px;
+      white-space: nowrap;
+    }
+
+    .api-status {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .api-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #444;
+      transition: background 0.3s;
+      flex-shrink: 0;
+    }
+
+    .api-dot.connected {
+      background: var(--green);
+    }
+
+    .api-dot.error {
+      background: var(--red);
+    }
+
+    .api-label-text {
+      display: none;
+    }
+
+    .content {
+      padding: 20px;
+      flex: 1;
+      min-width: 0;
+    }
+
+    /* ══════════════════════════════
+     PAGES
+  ══════════════════════════════ */
+    .page {
+      display: none;
+      animation: fadeIn 0.25s ease;
+    }
+
+    .page.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(6px)
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0)
+      }
+    }
+
+    /* ══════════════════════════════
+     STATS
+  ══════════════════════════════ */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    .stat-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 16px;
+      position: relative;
+      overflow: hidden;
+      transition: border-color 0.2s;
+    }
+
+    .stat-card:hover {
+      border-color: var(--border-gold);
+    }
+
+    .stat-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--gold), var(--gold-light));
+      opacity: 0.6;
+    }
+
+    .stat-label {
+      font-size: 9.5px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+    }
+
+    .stat-value {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 34px;
+      font-weight: 300;
+      color: var(--text-primary);
+      line-height: 1;
+    }
+
+    .stat-sub {
+      font-size: 10.5px;
+      color: var(--text-muted);
+      margin-top: 5px;
+    }
+
+    .stat-icon {
+      position: absolute;
+      right: 12px;
+      top: 12px;
+      font-size: 24px;
+      opacity: 0.06;
+      color: var(--gold);
+    }
+
+    .dashboard-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    /* ══════════════════════════════
+     CARDS
+  ══════════════════════════════ */
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+
+    .card-header {
+      padding: 13px 16px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      background: rgba(255, 255, 255, 0.012);
+    }
+
+    .card-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 16px;
+      font-weight: 400;
+      color: var(--text-primary);
+    }
+
+    .card-body {
+      padding: 16px;
+    }
+
+    /* ══════════════════════════════
+     BUTTONS
+  ══════════════════════════════ */
+    .btn {
+      padding: 8px 16px;
+      border-radius: var(--radius);
+      border: none;
+      cursor: pointer;
+      font-family: 'Jost', sans-serif;
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.4px;
+      transition: all 0.15s;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      white-space: nowrap;
+    }
+
+    .btn-gold {
+      background: var(--gold);
+      color: #0c0c0e;
+      box-shadow: 0 2px 10px rgba(201, 168, 76, 0.22);
+    }
+
+    .btn-gold:hover {
+      background: var(--gold-light);
+    }
+
+    .btn-outline {
+      background: transparent;
+      border: 1px solid var(--border-gold);
+      color: var(--gold);
+    }
+
+    .btn-outline:hover {
+      background: var(--gold-bg);
+    }
+
+    .btn-danger {
+      background: rgba(192, 57, 43, 0.14);
+      border: 1px solid rgba(192, 57, 43, 0.35);
+      color: #e74c3c;
+    }
+
+    .btn-danger:hover {
+      background: rgba(192, 57, 43, 0.24);
+    }
+
+    .btn-success {
+      background: rgba(39, 174, 96, 0.13);
+      border: 1px solid rgba(39, 174, 96, 0.35);
+      color: #2ecc71;
+    }
+
+    .btn-success:hover {
+      background: rgba(39, 174, 96, 0.22);
+    }
+
+    .btn-sm {
+      padding: 5px 10px;
+      font-size: 11px;
+      border-radius: 5px;
+    }
+
+    .btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    /* ══════════════════════════════
+     TABLES — horizontal scroll on mobile
+  ══════════════════════════════ */
+    .table-wrap {
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+      min-width: 480px;
+    }
+
+    thead th {
+      text-align: left;
+      padding: 9px 12px;
+      font-size: 9.5px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      border-bottom: 1px solid var(--border);
+      font-weight: 400;
+      background: rgba(255, 255, 255, 0.01);
+      white-space: nowrap;
+    }
+
+    tbody td {
+      padding: 10px 12px;
+      border-bottom: 1px solid rgba(46, 46, 56, 0.6);
+      color: var(--text-secondary);
+      vertical-align: middle;
+    }
+
+    tbody tr:hover td {
+      background: var(--bg-hover);
+      color: var(--text-primary);
+    }
+
+    tbody tr:last-child td {
+      border-bottom: none;
+    }
+
+    .td-name {
+      color: var(--text-primary);
+      font-weight: 500;
+    }
+
+    /* Mobile card-style rows (enabled via JS class) */
+    .mobile-cards table {
+      min-width: unset;
+    }
+
+    .mobile-cards thead {
+      display: none;
+    }
+
+    .mobile-cards tbody tr {
+      display: block;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      margin-bottom: 10px;
+      padding: 12px 14px;
+    }
+
+    .mobile-cards tbody td {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid rgba(46, 46, 56, 0.4);
+      padding: 7px 0;
+      font-size: 12.5px;
+    }
+
+    .mobile-cards tbody td:last-child {
+      border-bottom: none;
+    }
+
+    .mobile-cards tbody td::before {
+      content: attr(data-label);
+      font-size: 9.5px;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      flex-shrink: 0;
+      margin-right: 10px;
+    }
+
+    .mobile-cards tbody tr:hover {
+      background: var(--bg-hover);
+    }
+
+    /* ══════════════════════════════
+     BADGES
+  ══════════════════════════════ */
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 3px 8px;
+      border-radius: 20px;
+      font-size: 10px;
+      letter-spacing: 0.3px;
+      font-weight: 500;
+    }
+
+    .badge-green {
+      background: rgba(39, 174, 96, 0.12);
+      color: #2ecc71;
+      border: 1px solid rgba(39, 174, 96, 0.25);
+    }
+
+    .badge-red {
+      background: rgba(192, 57, 43, 0.12);
+      color: #e74c3c;
+      border: 1px solid rgba(192, 57, 43, 0.25);
+    }
+
+    .badge-amber {
+      background: rgba(230, 126, 34, 0.12);
+      color: #f39c12;
+      border: 1px solid rgba(230, 126, 34, 0.25);
+    }
+
+    .badge-blue {
+      background: rgba(41, 128, 185, 0.12);
+      color: #3498db;
+      border: 1px solid rgba(41, 128, 185, 0.25);
+    }
+
+    .badge-gold {
+      background: var(--gold-bg);
+      color: var(--gold);
+      border: 1px solid var(--border-gold);
+    }
+
+    /* ══════════════════════════════
+     FORMS
+  ══════════════════════════════ */
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+
+    .form-full {
+      grid-column: 1/-1;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    label {
+      font-size: 10px;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+
+    input,
+    select,
+    textarea {
+      background: var(--bg-deep);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 9px 12px;
+      color: var(--text-primary);
+      font-family: 'Jost', sans-serif;
+      font-size: 13px;
+      transition: border-color 0.15s, box-shadow 0.15s;
+      outline: none;
+      width: 100%;
+    }
+
+    input:focus,
+    select:focus,
+    textarea:focus {
+      border-color: var(--gold-dim);
+      box-shadow: 0 0 0 3px rgba(201, 168, 76, 0.07);
+    }
+
+    select option {
+      background: var(--bg-card);
+      color: var(--text-primary);
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 80px;
+    }
+
+    .form-actions {
+      display: flex;
+      gap: 10px;
+      padding-top: 10px;
+      flex-wrap: wrap;
+    }
+
+    /* ══════════════════════════════
+     PAGE HEADER
+  ══════════════════════════════ */
+    .page-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      margin-bottom: 18px;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .page-header h1 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 26px;
+      font-weight: 300;
+      color: var(--text-primary);
+    }
+
+    .page-header p {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    /* ══════════════════════════════
+     TABS
+  ══════════════════════════════ */
+    .tabs {
+      display: flex;
+      margin-bottom: 16px;
+      border-bottom: 1px solid var(--border);
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+    }
+
+    .tabs::-webkit-scrollbar {
+      display: none;
+    }
+
+    .tab {
+      padding: 10px 16px;
+      font-size: 12px;
+      color: var(--text-muted);
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+      transition: all 0.15s;
+      letter-spacing: 0.5px;
+      margin-bottom: -1px;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    .tab:hover {
+      color: var(--text-primary);
+    }
+
+    .tab.active {
+      color: var(--gold);
+      border-bottom-color: var(--gold);
+    }
+
+    .tab-content {
+      display: none;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    /* ══════════════════════════════
+     MODAL
+  ══════════════════════════════ */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.78);
+      z-index: 999;
+      align-items: center;
+      justify-content: center;
+      backdrop-filter: blur(4px);
+      padding: 16px;
+    }
+
+    .modal-overlay.open {
+      display: flex;
+    }
+
+    .modal {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      width: 100%;
+      max-width: 580px;
+      max-height: 92vh;
+      overflow-y: auto;
+      box-shadow: var(--shadow-lg);
+      animation: modalIn 0.22s ease;
+    }
+
+    @keyframes modalIn {
+      from {
+        opacity: 0;
+        transform: scale(0.95) translateY(-10px)
+      }
+
+      to {
+        opacity: 1;
+        transform: scale(1) translateY(0)
+      }
+    }
+
+    .modal-header {
+      padding: 18px 20px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      background: var(--bg-card);
+      z-index: 10;
+    }
+
+    .modal-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 19px;
+      font-weight: 400;
+      color: var(--gold);
+    }
+
+    .modal-close {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      cursor: pointer;
+      font-size: 14px;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.15s;
+      flex-shrink: 0;
+    }
+
+    .modal-close:hover {
+      background: var(--bg-hover);
+      color: var(--text-primary);
+    }
+
+    .modal-body {
+      padding: 18px 20px;
+    }
+
+    /* ══════════════════════════════
+     ROOM GRID
+  ══════════════════════════════ */
+    .room-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+      gap: 12px;
+    }
+
+    .room-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 14px;
+      cursor: pointer;
+      transition: all 0.18s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .room-card:hover {
+      border-color: var(--border-gold);
+      transform: translateY(-2px);
+      box-shadow: var(--shadow);
+    }
+
+    .room-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      border-radius: var(--radius) var(--radius) 0 0;
+    }
+
+    .room-card.status-available::before {
+      background: var(--green);
+    }
+
+    .room-card.status-occupied::before {
+      background: var(--red);
+    }
+
+    .room-card.status-maintenance::before {
+      background: var(--amber);
+    }
+
+    .room-card.status-reserved::before {
+      background: var(--blue);
+    }
+
+    .room-number {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 28px;
+      font-weight: 300;
+      color: var(--text-primary);
+    }
+
+    .room-type-label {
+      font-size: 9.5px;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+    }
+
+    .room-price {
+      font-size: 12.5px;
+      color: var(--gold);
+      margin-top: 7px;
+      font-weight: 500;
+    }
+
+    /* ══════════════════════════════
+     MISC
+  ══════════════════════════════ */
+    .stars {
+      color: var(--gold);
+      font-size: 14px;
+      letter-spacing: 1.5px;
+    }
+
+    .search-bar {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+
+    .search-bar input {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .alert {
+      padding: 11px 14px;
+      border-radius: var(--radius);
+      font-size: 13px;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      border: 1px solid;
+    }
+
+    .alert-success {
+      background: rgba(39, 174, 96, 0.1);
+      border-color: rgba(39, 174, 96, 0.25);
+      color: #2ecc71;
+    }
+
+    .alert-error {
+      background: rgba(192, 57, 43, 0.1);
+      border-color: rgba(192, 57, 43, 0.25);
+      color: #e74c3c;
+    }
+
+    .alert-info {
+      background: rgba(41, 128, 185, 0.1);
+      border-color: rgba(41, 128, 185, 0.25);
+      color: #3498db;
+    }
+
+    .alert-warning {
+      background: rgba(230, 126, 34, 0.1);
+      border-color: rgba(230, 126, 34, 0.25);
+      color: #f39c12;
+    }
+
+    .divider {
+      height: 1px;
+      background: var(--border);
+      margin: 14px 0;
+    }
+
+    .detail-list {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .detail-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 13px;
+      padding: 8px 0;
+      border-bottom: 1px solid rgba(46, 46, 56, 0.5);
+      gap: 10px;
+    }
+
+    .detail-row:last-child {
+      border-bottom: none;
+    }
+
+    .detail-key {
+      color: var(--text-muted);
+      font-size: 10.5px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      flex-shrink: 0;
+    }
+
+    .detail-val {
+      color: var(--text-primary);
+      text-align: right;
+      word-break: break-word;
+    }
+
+    .notif-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--gold);
+      display: inline-block;
+      margin-left: 6px;
+      vertical-align: middle;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+
+      0%,
+      100% {
+        opacity: 1
+      }
+
+      50% {
+        opacity: 0.25
+      }
+    }
+
+    ::-webkit-scrollbar {
+      width: 4px;
+      height: 4px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: var(--bg-panel);
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: var(--border);
+      border-radius: 3px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: var(--gold-dim);
+    }
+
+    .toast {
+      position: fixed;
+      bottom: 16px;
+      right: 16px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-gold);
+      color: var(--gold);
+      padding: 11px 16px;
+      border-radius: var(--radius);
+      font-size: 13px;
+      box-shadow: var(--shadow);
+      z-index: 9999;
+      transform: translateY(80px);
+      opacity: 0;
+      transition: all 0.3s;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      max-width: calc(100vw - 32px);
+    }
+
+    .toast.show {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    .toast.toast-error {
+      background: rgba(192, 57, 43, 0.18);
+      border-color: rgba(192, 57, 43, 0.4);
+      color: #e74c3c;
+    }
+
+    .toast.toast-success {
+      background: rgba(39, 174, 96, 0.15);
+      border-color: rgba(39, 174, 96, 0.35);
+      color: #2ecc71;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 40px 20px;
+      color: var(--text-muted);
+    }
+
+    .empty-state .icon {
+      font-size: 36px;
+      margin-bottom: 10px;
+      opacity: 0.2;
+    }
+
+    .empty-state p {
+      font-size: 13px;
+    }
+
+    .spinner {
+      display: inline-block;
+      width: 14px;
+      height: 14px;
+      border: 2px solid rgba(201, 168, 76, 0.15);
+      border-top-color: var(--gold);
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+      vertical-align: middle;
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg)
+      }
+    }
+
+    .loading-row td {
+      text-align: center;
+      padding: 28px;
+      color: var(--text-muted);
+      font-size: 13px;
+    }
+
+    /* action buttons inline */
+    .action-btns {
+      display: flex;
+      gap: 4px;
+      flex-wrap: wrap;
+    }
+
+    /* ══════════════════════════════
+     RESPONSIVE BREAKPOINTS
+  ══════════════════════════════ */
+
+    /* Tablet — 1024px */
+    @media (max-width: 1024px) {
+      .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .dashboard-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* Mobile — 768px */
+    @media (max-width: 768px) {
+      :root {
+        --sidebar-w: 0px;
+      }
+
+      /* Sidebar slides in */
+      .sidebar {
+        width: 260px;
+        transform: translateX(-100%);
+        box-shadow: none;
+      }
+
+      .sidebar.open {
+        transform: translateX(0);
+        box-shadow: var(--shadow-lg);
+      }
+
+      .sidebar-close-btn {
+        display: flex;
+      }
+
+      /* Main takes full width */
+      .main {
+        margin-left: 0;
+      }
+
+      /* Hamburger visible */
+      .hamburger {
+        display: flex;
+      }
+
+      /* Hide date on small screens */
+      .topbar-date {
+        display: none;
+      }
+
+      .content {
+        padding: 14px;
+      }
+
+      /* Stats 2-col on mobile */
+      .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+      }
+
+      .stat-value {
+        font-size: 28px;
+      }
+
+      /* Dashboard single col */
+      .dashboard-grid {
+        grid-template-columns: 1fr;
+      }
+
+      /* Form grid single col */
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .form-full {
+        grid-column: 1;
+      }
+
+      /* Page header stack */
+      .page-header {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .page-header h1 {
+        font-size: 22px;
+      }
+
+      /* Room grid 2 col */
+      .room-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      /* Tables become cards on mobile */
+      .table-wrap {
+        overflow-x: visible;
+      }
+
+      .table-wrap table {
+        min-width: unset;
+      }
+
+      /* Modal full-width */
+      .modal-overlay {
+        padding: 0;
+        align-items: flex-end;
+      }
+
+      .modal {
+        border-radius: 14px 14px 0 0;
+        max-height: 92vh;
+        border-bottom: none;
+      }
+
+      /* Admin badge shorter */
+      .admin-badge {
+        padding: 4px 8px;
+        font-size: 10px;
+      }
+    }
+
+    /* Small mobile — 480px */
+    @media (max-width: 480px) {
+      .stats-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+      }
+
+      .stat-card {
+        padding: 12px;
+      }
+
+      .stat-value {
+        font-size: 24px;
+      }
+
+      .stat-label {
+        font-size: 8.5px;
+      }
+
+      .room-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 8px;
+      }
+
+      .room-card {
+        padding: 12px;
+      }
+
+      .room-number {
+        font-size: 24px;
+      }
+
+      .btn-sm {
+        padding: 5px 8px;
+        font-size: 10.5px;
+      }
+
+      .topbar {
+        padding: 0 12px;
+        height: 50px;
+      }
+
+      .topbar-title {
+        font-size: 16px;
+      }
+
+      .content {
+        padding: 12px;
+      }
+    }
+
+    /* CLIENT SIDE */
+
+    .hero-section {
+      height: 90vh;
+      border-radius: 14px;
+      overflow: hidden;
+      background:
+        linear-gradient(rgba(0, 0, 0, 0.6),
+          rgba(0, 0, 0, 0.6)),
+        url('https://images.unsplash.com/photo-1566073771259-6a8506099945');
+      background-size: cover;
+      background-position: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .hero-overlay {
+      max-width: 800px;
+      padding: 20px;
+    }
+
+    .hero-overlay h1 {
+      font-size: 64px;
+      font-family: 'Cormorant Garamond', serif;
+      margin-bottom: 20px;
+      color: white;
+    }
+
+    .hero-overlay p {
+      font-size: 18px;
+      line-height: 1.8;
+      color: #ddd;
+      margin-bottom: 30px;
+    }
+
+    .hero-buttons {
+      display: flex;
+      gap: 15px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .quick-services {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 20px;
+      margin-bottom: 40px;
+    }
+
+    .service-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 30px 20px;
+      text-align: center;
+      transition: 0.3s;
+    }
+
+    .service-card:hover {
+      transform: translateY(-6px);
+      border-color: var(--gold);
+    }
+
+    .service-card i {
+      font-size: 38px;
+      margin-bottom: 20px;
+      color: var(--gold);
+    }
+
+    .service-card h3 {
+      margin-bottom: 10px;
+      font-size: 22px;
+    }
+
+    .service-card p {
+      color: var(--text-secondary);
+      font-size: 14px;
+    }
+
+    @media(max-width:768px) {
+
+      .hero-overlay h1 {
+        font-size: 42px;
+      }
+
+      .hero-overlay p {
+        font-size: 15px;
+      }
+
+      .hero-section {
+        height: 75vh;
+      }
+
+    }
+
+.booking-card{
+padding:30px;
+margin-bottom:25px;
+}
+
+.booking-title{
+margin-bottom:25px;
+font-size:28px;
+}
+
+.form-grid{
+display:grid;
+grid-template-columns:
+repeat(auto-fit,minmax(240px,1fr));
+gap:20px;
+}
+
+.input-group{
+display:flex;
+flex-direction:column;
+gap:8px;
+}
+
+.input-group label{
+font-size:14px;
+color:#c9a96e;
+font-weight:500;
+}
+
+.form-input{
+width:100%;
+padding:14px;
+border-radius:10px;
+border:1px solid #2e2e38;
+background:#111;
+color:white;
+font-size:14px;
+outline:none;
+transition:0.3s;
+}
+
+.form-input:focus{
+border-color:#c9a96e;
+box-shadow:0 0 10px rgba(201,169,110,0.2);
+}
+
+.form-input option{
+background:#111;
+color:white;
+}
+
+.booking-btn{
+margin-top:25px;
+padding:14px 28px;
+font-size:15px;
+}
+
+  </style>
+</head>
+
+<body>
+
+  <!-- Sidebar overlay (mobile tap-to-close) -->
+  <div class="sidebar-overlay" id="sidebar-overlay" onclick="closeSidebar()"></div>
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-logo">
+      <div>
+        <div class="hotel-name">Royal Crown</div>
+        <div class="tagline">Hotel Management</div>
+      </div>
+      <button class="sidebar-close-btn" onclick="closeSidebar()">✕</button>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="nav-section-label">Overview</div>
+
+      <div class="nav-item" data-page="home" onclick="navigate('home', this)">
+        <span class="icon">
+          <i class="fa-solid fa-house"></i>
+        </span>
+        Home
+      </div>
+
+      <div class="nav-item active" data-page="dashboard" onclick="navigate('dashboard', this)">
+        <span class="icon">◈</span> Dashboard
+      </div>
+
+      <div class="nav-section-label">Guests</div>
+      <div class="nav-item" data-page="guests" onclick="navigate('guests', this)">
+        <span class="icon">
+          <i class="fa-solid fa-users"></i>
+        </span>
+        Guest Profiles
+      </div>
+
+      <div class="nav-item" data-page="feedback" onclick="navigate('feedback', this)">
+        <span class="icon">
+          <i class="fa-solid fa-comments"></i>
+        </span>
+        Guest Feedback
+      </div>
+
+      <div class="nav-section-label">Rooms</div>
+      <div class="nav-item" data-page="rooms" onclick="navigate('rooms', this)">
+        <span class="icon">
+          <i class="fa-solid fa-bed"></i>
+        </span>
+        Room Management
+      </div>
+      <div class="nav-item" data-page="maintenance" onclick="navigate('maintenance', this)">
+        <span class="icon">
+          <i class="fa-solid fa-screwdriver-wrench"></i>
+        </span>
+        Maintenance <span class="notif-dot" id="maint-notif"></span>
+      </div>
+
+      <div class="nav-section-label">Bookings</div>
+      <div class="nav-item" data-page="bookings" onclick="navigate('bookings', this)">
+        <span class="icon">
+          <i class="fa-solid fa-calendar-check"></i>
+        </span>
+        Reservations
+      </div>
+      <div class="nav-item" data-page="history" onclick="navigate('history', this)">
+        <span class="icon">
+          <i class="fa-solid fa-clock-rotate-left"></i>
+        </span>
+        Booking History
+      </div>
+
+      <div class="nav-item" data-page="cancellations" onclick="navigate('cancellations', this)">
+        <span class="icon">
+          <i class="fa-solid fa-ban"></i>
+        </span>
+        Cancellations
+      </div>
+
+      <div class="nav-section-label">Finance</div>
+      <div class="nav-item" data-page="payments" onclick="navigate('payments', this)">
+        <span class="icon">
+          <i class="fa-solid fa-credit-card"></i>
+        </span>
+        Payments & Billing
+      </div>
+    </nav>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="main">
+    <header class="topbar">
+      <div class="topbar-left">
+        <button class="hamburger" id="hamburger" onclick="openSidebar()" aria-label="Open menu">☰</button>
+        <div class="topbar-title" id="topbar-title">HOME</div>
+      </div>
+      <div class="topbar-right">
+        <div class="api-status">
+          <span class="api-dot" id="api-dot"></span>
+          <span class="api-label-text" id="api-label">Connecting…</span>
+        </div>
+        <span class="topbar-date" id="current-date"></span>
+        <span class="admin-badge">◈ Admin</span>
+      </div>
+    </header>
+
+    <div class="content">
+
+      <!-- CLIENT HOME PAGE -->
+      <div class="page active" id="page-home">
+
+        <section class="hero-section">
+          <div class="hero-overlay">
+            <h1>Royal Crown Luxury Hotel</h1>
+            <p>
+              Experience premium hospitality, luxury rooms,
+              world-class dining and unforgettable comfort.
+            </p>
+
+            <div class="hero-buttons">
+              <button class="btn btn-gold" onclick="navigate('reservations',
+document.querySelector('[data-page=reservations]'))">
+                Book Now
+              </button>
+
+              <button class="btn btn-outline" onclick="navigate('dashboard',
+        document.querySelector('[data-page=dashboard]'))">
+                Admin Dashboard
+              </button>
+            </div>
+          </div>
+        </section>
+
+        <section class="quick-services">
+
+          <div class="service-card">
+            <i class="fa-solid fa-bed"></i>
+            <h3>Luxury Rooms</h3>
+            <p>Premium suites and deluxe rooms.</p>
+          </div>
+
+          <div class="service-card">
+            <i class="fa-solid fa-utensils"></i>
+            <h3>Fine Dining</h3>
+            <p>Experience luxury dining and cuisines.</p>
+          </div>
+
+          <div class="service-card">
+            <i class="fa-solid fa-spa"></i>
+            <h3>Spa & Wellness</h3>
+            <p>Relax with our wellness facilities.</p>
+          </div>
+
+          <div class="service-card">
+            <i class="fa-solid fa-car"></i>
+            <h3>Free Parking</h3>
+            <p>Secure parking for all guests.</p>
+          </div>
+
+        </section>
+
+      </div>
+
+      <!-- DASHBOARD -->
+      <div class="page" id="page-dashboard">
+        <div class="page-header">
+          <div>
+            <h1>Good morning, Manager</h1>
+            <p>Here's what's happening at Royal Crown 👑 today</p>
+          </div>
+          <button class="btn btn-outline btn-sm" onclick="renderDashboard()">↻ Refresh</button>
+        </div>
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-icon">◎</div>
+            <div class="stat-label">Total Guests</div>
+            <div class="stat-value" id="stat-guests">—</div>
+            <div class="stat-sub">Registered</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon">▦</div>
+            <div class="stat-label">Available</div>
+            <div class="stat-value" id="stat-available">—</div>
+            <div class="stat-sub">Rooms ready</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon">◉</div>
+            <div class="stat-label">Bookings</div>
+            <div class="stat-value" id="stat-bookings">—</div>
+            <div class="stat-sub">Total</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon">₹</div>
+            <div class="stat-label">Revenue</div>
+            <div class="stat-value" id="stat-revenue">—</div>
+            <div class="stat-sub">Completed</div>
+          </div>
+        </div>
+        <div class="dashboard-grid">
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">Recent Bookings</div><button class="btn btn-outline btn-sm"
+                onclick="navigate('bookings', document.querySelector('[data-page=bookings]'))">All</button>
+            </div>
+            <div class="table-wrap" id="dash-bookings-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Guest</th>
+                    <th>Room</th>
+                    <th>Check-in</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+                <tbody id="dashboard-bookings">
+                  <tr class="loading-row">
+                    <td colspan="4"><span class="spinner"></span></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">Room Occupancy</div>
+            </div>
+            <div class="card-body">
+              <div id="room-summary"></div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">Recent Payments</div><button class="btn btn-outline btn-sm"
+                onclick="navigate('payments', document.querySelector('[data-page=payments]'))">All</button>
+            </div>
+            <div class="table-wrap" id="dash-payments-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Guest</th>
+                    <th>Amount</th>
+                    <th>Method</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+                <tbody id="dashboard-payments">
+                  <tr class="loading-row">
+                    <td colspan="4"><span class="spinner"></span></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">Maintenance Alerts</div>
+            </div>
+            <div class="card-body" id="maintenance-alerts">
+              <div class="empty-state"><span class="spinner"></span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="page" id="page-reservations">
+
+        <div class="page-header">
+          <h1>Reservations</h1>
+          <p>Book your stay at Grand Lumière</p>
+        </div>
+
+
+        <div class="card booking-card">
+
+  <h2 class="booking-title">
+    Book Your Stay
+  </h2>
+
+  <div class="form-grid">
+
+    <div class="input-group">
+      <label>Full Name</label>
+      <input type="text"
+      id="r-name"
+      placeholder="Enter your full name"
+      class="form-input">
+    </div>
+
+    <div class="input-group">
+      <label>Phone</label>
+      <input type="tel"
+      id="r-phone"
+      placeholder="10-digit phone"
+      class="form-input">
+    </div>
+
+    <div class="input-group">
+      <label>Email Address</label>
+      <input type="email"
+      id="r-email"
+      placeholder="Enter your email"
+      class="form-input">
+    </div>
+
+    <div class="input-group">
+      <label>Proof Type</label>
+      <select id="r-proof-type" class="form-input">
+        <option value="Aadhaar">Aadhaar</option>
+        <option value="Passport">Passport</option>
+        <option value="Driving License">Driving License</option>
+        <option value="Voter ID">Voter ID</option>
+        <option value="PAN Card">PAN Card</option>
+      </select>
+    </div>
+
+    <div class="input-group">
+      <label>Proof Number</label>
+      <input type="text"
+      id="r-proof-no"
+      placeholder="Enter ID proof number"
+      class="form-input">
+    </div>
+
+    <div class="input-group">
+      <label>Room</label>
+      <select id="r-room-select" class="form-input">
+        <option value="">Select a room…</option>
+      </select>
+    </div>
+
+    <div class="input-group">
+      <label>Check In</label>
+      <input type="date"
+      id="r-checkin"
+      class="form-input">
+    </div>
+
+    <div class="input-group">
+      <label>Check Out</label>
+      <input type="date"
+      id="r-checkout"
+      class="form-input">
+    </div>
+
+    <div class="input-group">
+      <label>Adults</label>
+      <select id="r-adults" class="form-input">
+        <option value="1">1 Adult</option>
+        <option value="2" selected>2 Adults</option>
+        <option value="3">3 Adults</option>
+        <option value="4">4 Adults</option>
+      </select>
+    </div>
+
+    <div class="input-group">
+      <label>Children</label>
+      <select id="r-children" class="form-input">
+        <option value="0" selected>0 Children</option>
+        <option value="1">1 Child</option>
+        <option value="2">2 Children</option>
+        <option value="3">3 Children</option>
+      </select>
+    </div>
+
+    <div class="input-group" style="grid-column: 1 / -1">
+      <label>Special Requests</label>
+      <textarea id="r-requests" class="form-input" rows="2" placeholder="Any special requirements?"></textarea>
+    </div>
+
+  </div>
+
+  <div id="public-price-preview" style="display:none; margin: 14px 0;">
+    <div class="alert alert-info" id="public-price-text"></div>
+  </div>
+
+  <button class="btn btn-gold booking-btn" id="btn-public-book" onclick="submitPublicBooking()">
+    Confirm Booking
+  </button>
+
+</div>
+
+        <div class="card">
+
+          <table class="table">
+
+            <thead>
+              <tr>
+                <th>Booking #</th>
+                <th>Guest</th>
+                <th>Room</th>
+                <th>Check In</th>
+                <th>Check Out</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+
+            <tbody id="public-reservations-table">
+              <tr><td colspan="6" style="text-align:center;padding:24px;color:var(--text-muted)">Loading…</td></tr>
+            </tbody>
+
+          </table>
+
+        </div>
+
+      </div>
+
+      <!-- GUESTS -->
+      <div class="page" id="page-guests">
+        <div class="page-header">
+          <div>
+            <h1>Guest Profiles</h1>
+            <p>Manage all registered guests</p>
+          </div>
+          <button class="btn btn-gold btn-sm" onclick="openModal('modal-add-guest')">+ Add Guest</button>
+        </div>
+        <div class="search-bar">
+          <input type="text" placeholder="Search name, email or phone…" id="guest-search" oninput="filterGuests()">
+        </div>
+        <div class="card">
+          <div class="table-wrap" id="guests-table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Name</th>
+                  <th>Phone</th>
+                  <th>Email</th>
+                  <th>Proof</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="guests-table">
+                <tr class="loading-row">
+                  <td colspan="6"><span class="spinner"></span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- FEEDBACK -->
+      <div class="page" id="page-feedback">
+        <div class="page-header">
+          <div>
+            <h1>Guest Feedback</h1>
+            <p>Ratings and reviews</p>
+          </div>
+          <button class="btn btn-gold btn-sm" onclick="openModal('modal-add-feedback')">+ Add</button>
+        </div>
+        <div class="card">
+          <div class="table-wrap" id="feedback-table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Guest</th>
+                  <th>Rating</th>
+                  <th>Comment</th>
+                  <th>Date</th>
+                </tr>
+              </thead>
+              <tbody id="feedback-table">
+                <tr class="loading-row">
+                  <td colspan="5"><span class="spinner"></span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ROOMS -->
+      <div class="page" id="page-rooms">
+        <div class="page-header">
+          <div>
+            <h1>Room Management</h1>
+            <p>View and manage all rooms</p>
+          </div>
+          <button class="btn btn-gold btn-sm" onclick="openModal('modal-add-room')">+ Add Room</button>
+        </div>
+        <div class="tabs">
+          <div class="tab active" onclick="switchRoomTab('grid', this)">Room Grid</div>
+          <div class="tab" onclick="switchRoomTab('list', this)">List View</div>
+          <div class="tab" onclick="switchRoomTab('facilities', this)">Facilities</div>
+        </div>
+        <div class="tab-content active" id="room-tab-grid">
+          <div class="room-grid" id="rooms-grid"></div>
+        </div>
+        <div class="tab-content" id="room-tab-list">
+          <div class="card">
+            <div class="table-wrap" id="rooms-table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Room No.</th>
+                    <th>Type</th>
+                    <th>Floor</th>
+                    <th>Price/Night</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="rooms-table"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+        <div class="tab-content" id="room-tab-facilities">
+          <div class="card">
+            <div class="table-wrap" id="fac-table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Room No.</th>
+                    <th>Type</th>
+                    <th>Facilities</th>
+                  </tr>
+                </thead>
+                <tbody id="facilities-table"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- MAINTENANCE -->
+      <div class="page" id="page-maintenance">
+        <div class="page-header">
+          <div>
+            <h1>Room Maintenance</h1>
+            <p>Track maintenance issues</p>
+          </div>
+          <button class="btn btn-gold btn-sm" onclick="openModal('modal-add-maintenance')">+ Log Issue</button>
+        </div>
+        <div class="card">
+          <div class="table-wrap" id="maint-table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Room</th>
+                  <th>Issue</th>
+                  <th>Date</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="maintenance-table">
+                <tr class="loading-row">
+                  <td colspan="6"><span class="spinner"></span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- BOOKINGS -->
+      <div class="page" id="page-bookings">
+        <div class="page-header">
+          <div>
+            <h1>Reservations</h1>
+            <p>Manage all room bookings</p>
+          </div>
+          <button class="btn btn-gold btn-sm" onclick="openModal('modal-add-booking')">+ New</button>
+        </div>
+        <div class="card">
+          <div class="table-wrap" id="bookings-table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Guest</th>
+                  <th>Room</th>
+                  <th>Check-in</th>
+                  <th>Check-out</th>
+                  <th>Nights</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="bookings-table">
+                <tr class="loading-row">
+                  <td colspan="8"><span class="spinner"></span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- HISTORY -->
+      <div class="page" id="page-history">
+        <div class="page-header">
+          <div>
+            <h1>Booking History</h1>
+            <p>Complete status log</p>
+          </div>
+        </div>
+        <div class="card">
+          <div class="table-wrap" id="history-table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Booking</th>
+                  <th>Guest</th>
+                  <th>Room</th>
+                  <th>Status</th>
+                  <th>Date</th>
+                  <th>Remarks</th>
+                </tr>
+              </thead>
+              <tbody id="history-table">
+                <tr class="loading-row">
+                  <td colspan="7"><span class="spinner"></span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- CANCELLATIONS -->
+      <div class="page" id="page-cancellations">
+        <div class="page-header">
+          <div>
+            <h1>Cancellations</h1>
+            <p>View cancelled reservations</p>
+          </div>
+          <button class="btn btn-danger btn-sm" onclick="openModal('modal-add-cancel')">+ Cancel</button>
+        </div>
+        <div class="card">
+          <div class="table-wrap" id="cancel-table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Booking</th>
+                  <th>Guest</th>
+                  <th>Room</th>
+                  <th>Reason</th>
+                  <th>Date</th>
+                  <th>Refund</th>
+                </tr>
+              </thead>
+              <tbody id="cancellations-table">
+                <tr class="loading-row">
+                  <td colspan="7"><span class="spinner"></span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- PAYMENTS -->
+      <div class="page" id="page-payments">
+        <div class="page-header">
+          <div>
+            <h1>Payments & Billing</h1>
+            <p>Track all transactions</p>
+          </div>
+          <button class="btn btn-gold btn-sm" onclick="openModal('modal-add-payment')">+ Record</button>
+        </div>
+        <div class="stats-grid" style="grid-template-columns:repeat(3,1fr); margin-bottom:16px;">
+          <div class="stat-card">
+            <div class="stat-label">Revenue</div>
+            <div class="stat-value" id="pay-total">—</div>
+            <div class="stat-sub">Completed</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Pending</div>
+            <div class="stat-value" id="pay-pending">—</div>
+            <div class="stat-sub">Awaiting</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Count</div>
+            <div class="stat-value" id="pay-count">—</div>
+            <div class="stat-sub">Total</div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="table-wrap" id="payments-table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Booking</th>
+                  <th>Guest</th>
+                  <th>Amount</th>
+                  <th>Method</th>
+                  <th>Date</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="payments-table">
+                <tr class="loading-row">
+                  <td colspan="8"><span class="spinner"></span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- ══════════ MODALS ══════════ -->
+
+  <div class="modal-overlay" id="modal-add-guest">
+    <div class="modal">
+      <div class="modal-header">
+        <div class="modal-title">Register New Guest</div><button class="modal-close"
+          onclick="closeModal('modal-add-guest')">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-grid">
+          <div class="form-group form-full"><label>Full Name *</label><input type="text" id="g-name"
+              placeholder="Guest full name"></div>
+          <div class="form-group"><label>Phone *</label><input type="text" id="g-phone" placeholder="10-digit number">
+          </div>
+          <div class="form-group"><label>Email</label><input type="email" id="g-email" placeholder="email@example.com">
+          </div>
+          <div class="form-group form-full"><label>Address</label><textarea id="g-address"
+              placeholder="Full address"></textarea></div>
+          <div class="form-group"><label>Proof Type *</label>
+            <select id="g-proof-type">
+              <option>Aadhaar</option>
+              <option>Passport</option>
+              <option>Driving License</option>
+              <option>Voter ID</option>
+              <option>PAN Card</option>
+            </select>
+          </div>
+          <div class="form-group"><label>Proof Number *</label><input type="text" id="g-proof-no"
+              placeholder="ID number"></div>
+        </div>
+        <div class="form-actions">
+          <button class="btn btn-gold" id="btn-add-guest" onclick="addGuest()">Register Guest</button>
+          <button class="btn btn-outline" onclick="closeModal('modal-add-guest')">Cancel</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="modal-add-feedback">
+    <div class="modal">
+      <div class="modal-header">
+        <div class="modal-title">Submit Feedback</div><button class="modal-close"
+          onclick="closeModal('modal-add-feedback')">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-grid">
+          <div class="form-group form-full"><label>Guest *</label><select id="fb-guest"></select></div>
+          <div class="form-group form-full"><label>Rating *</label>
+            <select id="fb-rating">
+              <option value="5">★★★★★ Excellent</option>
+              <option value="4">★★★★☆ Good</option>
+              <option value="3">★★★☆☆ Average</option>
+              <option value="2">★★☆☆☆ Poor</option>
+              <option value="1">★☆☆☆☆ Terrible</option>
+            </select>
+          </div>
+          <div class="form-group form-full"><label>Comment</label><textarea id="fb-comment"
+              placeholder="Guest's comment…"></textarea></div>
+        </div>
+        <div class="form-actions">
+          <button class="btn btn-gold" id="btn-add-feedback" onclick="addFeedback()">Submit</button>
+          <button class="btn btn-outline" onclick="closeModal('modal-add-feedback')">Cancel</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="modal-add-room">
+    <div class="modal">
+      <div class="modal-header">
+        <div class="modal-title">Add New Room</div><button class="modal-close"
+          onclick="closeModal('modal-add-room')">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-grid">
+          <div class="form-group"><label>Room Number *</label><input type="text" id="r-num" placeholder="e.g. 305">
+          </div>
+          <div class="form-group"><label>Floor</label><input type="number" id="r-floor" placeholder="3"></div>
+          <div class="form-group"><label>Room Type *</label>
+            <select id="r-type">
+              <option>Single</option>
+              <option>Double</option>
+              <option>Deluxe</option>
+              <option>Suite</option>
+              <option>Presidential</option>
+            </select>
+          </div>
+          <div class="form-group"><label>Price / Night (₹) *</label><input type="number" id="r-price"
+              placeholder="2500"></div>
+          <div class="form-group"><label>Status</label>
+            <select id="r-status">
+              <option>Available</option>
+              <option>Occupied</option>
+              <option>Maintenance</option>
+              <option>Reserved</option>
+            </select>
+          </div>
+          <div class="form-group form-full"><label>Facilities (comma separated)</label><input type="text"
+              id="r-facilities" placeholder="WiFi, AC, TV, Mini Fridge"></div>
+        </div>
+        <div class="form-actions">
+          <button class="btn btn-gold" id="btn-add-room" onclick="addRoom()">Add Room</button>
+          <button class="btn btn-outline" onclick="closeModal('modal-add-room')">Cancel</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="modal-add-maintenance">
+    <div class="modal">
+      <div class="modal-header">
+        <div class="modal-title">Log Maintenance Issue</div><button class="modal-close"
+          onclick="closeModal('modal-add-maintenance')">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-grid">
+          <div class="form-group form-full"><label>Room *</label><select id="m-room"></select></div>
+          <div class="form-group form-full"><label>Issue Description *</label><textarea id="m-issue"
+              placeholder="Describe the problem…"></textarea></div>
+          <div class="form-group"><label>Date *</label><input type="date" id="m-date"></div>
+          <div class="form-group"><label>Status</label>
+            <select id="m-status">
+              <option>Pending</option>
+              <option>In Progress</option>
+              <option>Resolved</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-actions">
+          <button class="btn btn-gold" id="btn-add-maint" onclick="addMaintenance()">Log Issue</button>
+          <button class="btn btn-outline" onclick="closeModal('modal-add-maintenance')">Cancel</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="modal-add-booking">
+    <div class="modal">
+      <div class="modal-header">
+        <div class="modal-title">New Reservation</div><button class="modal-close"
+          onclick="closeModal('modal-add-booking')">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-grid">
+          <div class="form-group form-full"><label>Guest *</label><select id="b-guest"></select></div>
+          <div class="form-group form-full"><label>Room *</label><select id="b-room"></select></div>
+          <div class="form-group"><label>Check-in *</label><input type="date" id="b-checkin"></div>
+          <div class="form-group"><label>Check-out *</label><input type="date" id="b-checkout"></div>
+          <div class="form-group"><label>Adults</label><input type="number" id="b-adults" value="1" min="1"></div>
+          <div class="form-group"><label>Children</label><input type="number" id="b-children" value="0" min="0"></div>
+          <div class="form-group form-full"><label>Special Requests</label><textarea id="b-requests"
+              placeholder="Any special requirements…"></textarea></div>
+        </div>
+        <div id="booking-price-preview" style="display:none; margin:10px 0;">
+          <div class="alert alert-info" id="booking-price-text"></div>
+        </div>
+        <div class="form-actions">
+          <button class="btn btn-outline" onclick="previewBookingPrice()">Preview Price</button>
+          <button class="btn btn-gold" id="btn-add-booking" onclick="addBooking()">Confirm</button>
+          <button class="btn btn-outline" onclick="closeModal('modal-add-booking')">Cancel</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="modal-add-cancel">
+    <div class="modal">
+      <div class="modal-header">
+        <div class="modal-title">Cancel Booking</div><button class="modal-close"
+          onclick="closeModal('modal-add-cancel')">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-grid">
+          <div class="form-group form-full"><label>Booking *</label><select id="c-booking"></select></div>
+          <div class="form-group form-full"><label>Reason *</label><textarea id="c-reason"
+              placeholder="Reason for cancellation…"></textarea></div>
+          <div class="form-group"><label>Cancel Date *</label><input type="date" id="c-date"></div>
+          <div class="form-group"><label>Refund Amount (₹)</label><input type="number" id="c-refund" placeholder="0.00">
+          </div>
+        </div>
+        <div class="form-actions">
+          <button class="btn btn-danger" id="btn-cancel-booking" onclick="cancelBooking()">Confirm Cancellation</button>
+          <button class="btn btn-outline" onclick="closeModal('modal-add-cancel')">Back</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="modal-add-payment">
+    <div class="modal">
+      <div class="modal-header">
+        <div class="modal-title">Record Payment</div><button class="modal-close"
+          onclick="closeModal('modal-add-payment')">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-grid">
+          <div class="form-group form-full"><label>Booking *</label><select id="p-booking"></select></div>
+          <div class="form-group"><label>Amount (₹) *</label><input type="number" id="p-amount" placeholder="0.00">
+          </div>
+          <div class="form-group"><label>Payment Method *</label>
+            <select id="p-method">
+              <option>Cash</option>
+              <option>Credit Card</option>
+              <option>Debit Card</option>
+              <option>UPI</option>
+              <option>Bank Transfer</option>
+              <option>Online</option>
+            </select>
+          </div>
+          <div class="form-group"><label>Status</label>
+            <select id="p-status">
+              <option>Completed</option>
+              <option>Pending</option>
+              <option>Failed</option>
+              <option>Refunded</option>
+            </select>
+          </div>
+          <div class="form-group form-full"><label>Transaction Ref</label><input type="text" id="p-ref"
+              placeholder="TXN123456"></div>
+        </div>
+        <div class="form-actions">
+          <button class="btn btn-gold" id="btn-add-payment" onclick="addPayment()">Record Payment</button>
+          <button class="btn btn-outline" onclick="closeModal('modal-add-payment')">Cancel</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="modal-room-detail">
+    <div class="modal">
+      <div class="modal-header">
+        <div class="modal-title" id="room-detail-title">Room Details</div><button class="modal-close"
+          onclick="closeModal('modal-room-detail')">✕</button>
+      </div>
+      <div class="modal-body" id="room-detail-body"></div>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="modal-guest-detail">
+    <div class="modal">
+      <div class="modal-header">
+        <div class="modal-title" id="guest-detail-title">Guest Profile</div><button class="modal-close"
+          onclick="closeModal('modal-guest-detail')">✕</button>
+      </div>
+      <div class="modal-body" id="guest-detail-body"></div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <script>
+    // ══════════════════════════════
+    // SIDEBAR MOBILE
+    // ══════════════════════════════
+    function openSidebar() {
+      document.getElementById('sidebar').classList.add('open');
+      document.getElementById('sidebar-overlay').classList.add('show');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeSidebar() {
+      document.getElementById('sidebar').classList.remove('open');
+      document.getElementById('sidebar-overlay').classList.remove('show');
+      document.body.style.overflow = '';
+    }
+
+    // ══════════════════════════════
+    // MOBILE TABLE → CARDS
+    // ══════════════════════════════
+    function applyMobileCards() {
+      const isMobile = window.innerWidth <= 768;
+      // List of [wrapId, data-label arrays]
+      const tables = [
+        { id: 'guests-table-wrap', labels: ['ID', 'Name', 'Phone', 'Email', 'Proof', 'Actions'] },
+        { id: 'feedback-table-wrap', labels: ['ID', 'Guest', 'Rating', 'Comment', 'Date'] },
+        { id: 'rooms-table-wrap', labels: ['Room No.', 'Type', 'Floor', 'Price/Night', 'Status', 'Actions'] },
+        { id: 'fac-table-wrap', labels: ['Room No.', 'Type', 'Facilities'] },
+        { id: 'maint-table-wrap', labels: ['ID', 'Room', 'Issue', 'Date', 'Status', 'Actions'] },
+        { id: 'bookings-table-wrap', labels: ['ID', 'Guest', 'Room', 'Check-in', 'Check-out', 'Nights', 'Status', 'Actions'] },
+        { id: 'history-table-wrap', labels: ['ID', 'Booking', 'Guest', 'Room', 'Status', 'Date', 'Remarks'] },
+        { id: 'cancel-table-wrap', labels: ['ID', 'Booking', 'Guest', 'Room', 'Reason', 'Date', 'Refund'] },
+        { id: 'payments-table-wrap', labels: ['ID', 'Booking', 'Guest', 'Amount', 'Method', 'Date', 'Status', 'Actions'] },
+        { id: 'dash-bookings-wrap', labels: ['Guest', 'Room', 'Check-in', 'Status'] },
+        { id: 'dash-payments-wrap', labels: ['Guest', 'Amount', 'Method', 'Status'] },
+      ];
+      tables.forEach(({ id, labels }) => {
+        const wrap = document.getElementById(id);
+        if (!wrap) return;
+        if (isMobile) {
+          wrap.classList.add('mobile-cards');
+          wrap.querySelectorAll('tbody td').forEach((td, i) => {
+            const label = labels[i % labels.length];
+            if (label) td.setAttribute('data-label', label);
+          });
+        } else {
+          wrap.classList.remove('mobile-cards');
+        }
+      });
+    }
+
+    window.addEventListener('resize', applyMobileCards);
+  </script>
+  <script src="config.js"></script>
+  <script src="script.js"></script>
+  <script>
+    // After script.js loads, patch navigate to close sidebar on mobile
+    const _origNavigate = navigate;
+    window.navigate = function (page, el) {
+      _origNavigate(page, el);
+      if (window.innerWidth <= 768) closeSidebar();
+      setTimeout(applyMobileCards, 100);
+    };
+    // Initial mobile card apply after first render
+    setTimeout(applyMobileCards, 300);
+  </script>
+</body>
+
+</html>
